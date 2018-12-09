@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@drawable/bazaar_logobar"/>
+
+
+    <ImageButton
+        android:id="@+id/scanner1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/background2"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="145dp"
+        android:onClick="scanBar"
+        android:src="@drawable/ic_action_name" />
+
+    <ImageButton
+        android:id="@+id/scanner2"
+        android:background="@drawable/background2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="-50dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="145dp"
+        android:src="@drawable/ic_shopping_cart__24dp"
+
+        />
+
+    <ImageButton
+        android:id="@+id/scanner3"
+        android:background="@drawable/background2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="-50dp"
+        android:layout_marginLeft="145dp"
+       android:src="@drawable/ic_refresh_black_24dp"
+
+       />
+
+
+
+</LinearLayout>

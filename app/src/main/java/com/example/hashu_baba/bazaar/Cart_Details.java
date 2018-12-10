@@ -1,10 +1,17 @@
 package com.example.hashu_baba.bazaar;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +87,70 @@ public class Cart_Details extends AppCompatActivity{
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
+
+        orderslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final Dialog dialog = new Dialog(Cart_Details.this);
+                dialog.setContentView(R.layout.update_quantity);
+
+
+
+                final TextView quantity        = dialog.findViewById(R.id.quantity);
+
+                final NewProduct product = OrderMap.get(position);
+
+                quantity.setText(product.getQuantity().toString());
+
+                Button btnPlus = (dialog.findViewById(R.id.btnPlus));
+                Button btnMinus = (dialog.findViewById(R.id.btnMinus));
+                Button btnUpdate = (dialog.findViewById(R.id.btnUpdate));
+
+                btnPlus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        quantity.setText(String.valueOf(Integer.parseInt(quantity.getText().toString())+1));
+                    }
+                });
+
+                btnMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        quantity.setText(String.valueOf(Integer.parseInt(quantity.getText().toString())-1));
+                    }
+                });
+
+                btnUpdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FirebaseDatabase.getInstance().getReference("Users").child(getMacAddr()).orderByChild("productName").equalTo(product.ProductName).addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                FirebaseDatabase.getInstance().getReference("Users").child(getMacAddr()).child(dataSnapshot.getKey()).child("quantity").setValue(quantity.getText());
+                                dialog.dismiss();
+                                mAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {}
+                        });
+
+                    }
+                });
+
+                dialog.show();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+            }
         });
     }
 

@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ZXingScannerView scannerView;
     String Barcode = null;
     String macAddress;
-    String quantity,name,price;
+    String quantity,name,price,name1,price1;
 
 
     @Override
@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(scannerView);
         scannerView.startCamera();
+
+
     }
 
 
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
                    name = dataSnapshot.child("ProductName").getValue().toString();
                    price = dataSnapshot.child("ProductPrice").getValue().toString();
+
 
                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                     alertDialog.setTitle("Product Details");
@@ -129,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
+
+
             });
 
 

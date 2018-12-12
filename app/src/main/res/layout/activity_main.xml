@@ -24,7 +24,7 @@
         android:layout_marginBottom="80dp"
         android:layout_marginLeft="145dp"
         android:onClick="scanBar"
-        android:src="@drawable/ic_action_name" />
+        android:src="@drawable/ic_scan" />
 
     <ImageButton
         android:id="@+id/scanner2"

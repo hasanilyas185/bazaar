@@ -37,7 +37,7 @@ public class Cart_Details extends AppCompatActivity{
     HashMap<Integer, NewProduct> OrderMap;
     HashMap<Integer, NewTotal> OrderMap1;
     int q,p,Total,count;
-    int index;
+    int index = 0;
     String macaddress,name,price,quantity;
     Integer GrandTotal=0;
 
@@ -60,70 +60,67 @@ public class Cart_Details extends AppCompatActivity{
 
         macaddress = getMacAddr();
 
-        /*FirebaseDatabase.getInstance().getReference("Users").child(macaddress).addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference("Users").child(macaddress).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 count = (int) dataSnapshot.getChildrenCount();
+
+                FirebaseDatabase.getInstance().getReference("Users").child(macaddress).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        index++;
+
+
+
+                        name = dataSnapshot.child("productName").getValue().toString();
+                        price = dataSnapshot.child("productPrice").getValue().toString();
+                        quantity = dataSnapshot.child("quantity").getValue().toString();
+                        q = Integer.parseInt(quantity);
+                        p = Integer.parseInt(price);
+                        Total = q*p;
+                        GrandTotal =  GrandTotal+Total;
+
+
+                        NewProduct order = new NewProduct(name,p,q,Total);
+                        OrderMap.put(orderlist.size(),order);
+                        orderlist.add(order);
+                        mAdapter.notifyDataSetChanged();
+
+                        if(index==count)
+                        {
+                            NewTotal  total = new NewTotal(Total,GrandTotal);
+                            OrderMap1.put(orderlist1.size(),total);
+                            orderlist1.add(total);
+                            nAdapter.notifyDataSetChanged();
+
+                        }
+
+
+
+
+
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
+                });
 
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
-
-
-
-        FirebaseDatabase.getInstance().getReference("Users").child(macaddress).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                //index++;
-
-
-
-                name = dataSnapshot.child("productName").getValue().toString();
-                price = dataSnapshot.child("productPrice").getValue().toString();
-                quantity = dataSnapshot.child("quantity").getValue().toString();
-                q = Integer.parseInt(quantity);
-                p = Integer.parseInt(price);
-                Total = q*p;
-                GrandTotal =  GrandTotal+Total;
-
-
-                NewProduct order = new NewProduct(name,p,q,Total);
-                OrderMap.put(orderlist.size(),order);
-                orderlist.add(order);
-                mAdapter.notifyDataSetChanged();
-                NewTotal order1 = new NewTotal(Total,GrandTotal);
-                OrderMap1.put(orderlist1.size(),order1);
-                orderlist1.add(order1);
-                nAdapter.notifyDataSetChanged();
-
-                /*if(index==count)
-                {
-                    NewTotal order1 = new NewTotal(Total,GrandTotal);
-                    OrderMap1.put(orderlist1.size(),order1);
-                    orderlist1.add(order1);
-                    nAdapter.notifyDataSetChanged();
-
-                }*/
-
-
-
-
-
-            }
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
+
+
+
 
         orderslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

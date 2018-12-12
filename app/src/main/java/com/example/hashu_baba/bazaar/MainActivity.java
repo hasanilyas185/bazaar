@@ -41,12 +41,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         scanner2 = (ImageButton) findViewById(R.id.scanner2);
         scanner3 = (ImageButton) findViewById(R.id.scanner3);
 
-        scanner3.setOnClickListener(new View.OnClickListener() {
+        /*scanner3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast toast = Toast.makeText(getApplicationContext(), "Connected to Database Successfully", Toast.LENGTH_SHORT);
@@ -63,10 +64,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
             }
-        });
+        });*/
+    }
 
+    public void cart(View view)
+    {
+        Intent intent = new Intent(MainActivity.this, Cart_Details.class);
+        startActivity(intent);
+    }
 
-
+    public void refresh(View view)
+    {
+        Toast toast = Toast.makeText(getApplicationContext(), "Connected to Database Successfully", Toast.LENGTH_SHORT);
+        toast.setMargin(0, -5);
+        toast.show();
     }
 
     public void scanBar(View view) {
@@ -76,15 +87,22 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(scannerView);
         scannerView.startCamera();
-
-
     }
 
+    @Override
+    public void onBackPressed() {
+        setContentView(R.layout.activity_main);
+        scannerView.stopCamera();
+        this.recreate();
+        //super.onBackPressed();
+    }
 
     class ZXingScannerResultHandler implements ZXingScannerView.ResultHandler {
         @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
         @Override
         public void handleResult(Result result) {
+
+
             Barcode = result.getText();
             macAddress = getMacAddr();
 
@@ -132,11 +150,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-
-
             });
 
-
+            setContentView(R.layout.activity_main);
+            scannerView.stopCamera();
         }
 
 

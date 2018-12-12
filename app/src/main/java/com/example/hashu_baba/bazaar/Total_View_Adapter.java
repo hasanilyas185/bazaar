@@ -44,15 +44,8 @@ public class Total_View_Adapter extends ArrayAdapter<NewTotal> {
 
         }
 
-        ((TextView) v.findViewById(R.id.GrandTotal)).setText( "GrandTotal : " + currentOrder.getGrandTotal());
-
-
-
-
-
+        ((TextView) v.findViewById(R.id.GrandTotal)).setText( "GrandTotal : Rs." + currentOrder.getGrandTotal() + "/-");
         return v;
-
-
     }
 
 }

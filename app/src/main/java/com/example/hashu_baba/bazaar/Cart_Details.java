@@ -45,7 +45,6 @@ public class Cart_Details extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
-
         orderslist = (ListView)findViewById(R.id.cart_view);
         orderslist1 = (ListView)findViewById(R.id.cart_view2);
         orderlist = new ArrayList<NewProduct>();
@@ -64,54 +63,17 @@ public class Cart_Details extends AppCompatActivity{
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                count = (int) dataSnapshot.getChildrenCount();
+                for (DataSnapshot ds: dataSnapshot.getChildren())
+                {
+                    String price = ds.child("productPrice").getValue().toString();
+                    String quantity = ds.child("quantity").getValue().toString();
 
-                FirebaseDatabase.getInstance().getReference("Users").child(macaddress).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        index++;
-
-
-
-                        name = dataSnapshot.child("productName").getValue().toString();
-                        price = dataSnapshot.child("productPrice").getValue().toString();
-                        quantity = dataSnapshot.child("quantity").getValue().toString();
-                        q = Integer.parseInt(quantity);
-                        p = Integer.parseInt(price);
-                        Total = q*p;
-                        GrandTotal =  GrandTotal+Total;
-
-
-                        NewProduct order = new NewProduct(name,p,q,Total);
-                        OrderMap.put(orderlist.size(),order);
-                        orderlist.add(order);
-                        mAdapter.notifyDataSetChanged();
-
-                        if(index==count)
-                        {
-                            NewTotal  total = new NewTotal(Total,GrandTotal);
-                            OrderMap1.put(orderlist1.size(),total);
-                            orderlist1.add(total);
-                            nAdapter.notifyDataSetChanged();
-
-                        }
-
-
-
-
-
-                    }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {}
-                });
-
+                    GrandTotal += Integer.parseInt(price) * Integer.parseInt(quantity);
+                }
+                NewTotal  total = new NewTotal(Total,GrandTotal);
+                OrderMap1.put(orderlist1.size(),total);
+                orderlist1.add(total);
+                nAdapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -119,12 +81,37 @@ public class Cart_Details extends AppCompatActivity{
             }
         });
 
+        FirebaseDatabase.getInstance().getReference("Users").child(macaddress).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                name = dataSnapshot.child("productName").getValue().toString();
+                price = dataSnapshot.child("productPrice").getValue().toString();
+                quantity = dataSnapshot.child("quantity").getValue().toString();
+                q = Integer.parseInt(quantity);
+                p = Integer.parseInt(price);
+                Total = q*p;
+
+                NewProduct order = new NewProduct(name,p,q,Total);
+                OrderMap.put(orderlist.size(),order);
+                orderlist.add(order);
+                mAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {}
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
+        });
 
 
 
         orderslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, final View MainView, int position, long id) {
                 final Dialog dialog = new Dialog(Cart_Details.this);
                 dialog.setContentView(R.layout.update_quantity);
 
@@ -150,7 +137,7 @@ public class Cart_Details extends AppCompatActivity{
                 btnMinus.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        quantity.setText(String.valueOf(Integer.parseInt(quantity.getText().toString())-1));
+                        if(Integer.parseInt(quantity.getText().toString()) > 0) quantity.setText(String.valueOf(Integer.parseInt(quantity.getText().toString())-1));
                     }
                 });
 
@@ -160,11 +147,14 @@ public class Cart_Details extends AppCompatActivity{
                         FirebaseDatabase.getInstance().getReference("Users").child(getMacAddr()).orderByChild("productName").equalTo(product.ProductName).addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                                 FirebaseDatabase.getInstance().getReference("Users").child(getMacAddr()).child(dataSnapshot.getKey()).child("quantity").setValue(quantity.getText());
+
+                                TextView  text = (TextView) MainView.findViewById(R.id.Quantity);
+                                MainView.refreshDrawableState();
+                                text.setText("Quantity : " + quantity.getText());
+                                refresh();
                                 dialog.dismiss();
-                             TextView  text = (TextView) view.findViewById(R.id.Quantity);
-                             view.refreshDrawableState();
-                             text.setText("Quantity : " + quantity.getText());
                             }
 
                             @Override
@@ -214,5 +204,9 @@ public class Cart_Details extends AppCompatActivity{
         } catch (Exception ex) {
         }
         return "02:00:00:00:00:00";
+    }
+    void refresh()
+    {
+        this.recreate();
     }
 }

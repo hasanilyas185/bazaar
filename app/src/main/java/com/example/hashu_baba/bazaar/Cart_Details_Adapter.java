@@ -51,9 +51,9 @@ public class Cart_Details_Adapter extends ArrayAdapter<NewProduct> {
         }
 
         ((TextView) v.findViewById(R.id.productName)).setText( "Name : " + currentOrder.getProductName());
-        ((TextView) v.findViewById(R.id.productPrice)).setText( "Price : " + currentOrder.getProductPrice());
+        ((TextView) v.findViewById(R.id.productPrice)).setText( "Price : Rs." + currentOrder.getProductPrice() + "/-");
         ((TextView) v.findViewById(R.id.Quantity)).setText( "Quantity : " + currentOrder.getQuantity());
-        ((TextView) v.findViewById(R.id.Total)).setText( "Total : " + currentOrder.getTotal());
+        ((TextView) v.findViewById(R.id.Total)).setText( "Total : Rs." + currentOrder.getTotal() + "/-");
 
 
 

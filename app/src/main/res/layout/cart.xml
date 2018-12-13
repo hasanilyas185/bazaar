@@ -6,11 +6,22 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cart Details"
+        android:text="Your Cart"
         android:gravity="center"
         android:textSize="30dp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-smallcaps"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <ListView
         android:id="@+id/cart_view"
         android:layout_width="match_parent"
@@ -20,6 +31,14 @@
 
          >
     </ListView>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/pd"
+        android:visibility="gone"
+        />
 
     <ListView
         android:id="@+id/cart_view2"

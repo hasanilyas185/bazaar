@@ -1,6 +1,7 @@
 package com.example.hashu_baba.bazaar;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,11 +42,22 @@ public class Cart_Details extends AppCompatActivity{
     int index = 0;
     String macaddress,name,price,quantity;
     Integer GrandTotal=0;
+    ProgressBar pd;
 
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart);
+
+        pd = findViewById(R.id.pd);
+        pd.setVisibility(View.VISIBLE);
+
         orderslist = (ListView)findViewById(R.id.cart_view);
         orderslist1 = (ListView)findViewById(R.id.cart_view2);
         orderlist = new ArrayList<NewProduct>();
@@ -74,6 +87,7 @@ public class Cart_Details extends AppCompatActivity{
                 OrderMap1.put(orderlist1.size(),total);
                 orderlist1.add(total);
                 nAdapter.notifyDataSetChanged();
+                pd.setVisibility(View.GONE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
